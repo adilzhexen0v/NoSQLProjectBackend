@@ -19,6 +19,10 @@ const UserSchema = new mongoose.Schema({
           required: true,
      },
      avatarUrl: String,
+     bookedAppointments: {
+          type: Array,
+          ref: 'BookedAppointment'
+     },
 
 },
 {

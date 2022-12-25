@@ -4,8 +4,10 @@ import mongoose from 'mongoose';
 import { registerValidator, loginValidator } from './validators/auth.js';
 import { addDoctorValidator } from './validators/doctor.js';
 import { adminValidator } from './validators/admin.js';
-import checkAuth from './middlewares/checkAuth.js';
-import { UserController, DoctorController, AdminController } from './controllers/index.js';
+import checkUser from './middlewares/checkUser.js';
+import checkAdmin from './middlewares/checkAdmin.js';
+import { UserController, DoctorController, AdminController, AppointmentController } from './controllers/index.js';
+import checkDoctor from './middlewares/checkDoctor.js';
 mongoose.connect(
      'mongodb+srv://admin:fDJOm5IhWXOwd0Hp@cluster0.5cekcxl.mongodb.net/hospitalDB?retryWrites=true&w=majority'
 ).then(() => {
@@ -24,14 +26,20 @@ app.get('/', async(req, res) => {
 
 app.post('/user/register', registerValidator, UserController.register); 
 app.post('/user/login', loginValidator, UserController.login);
-app.get('/user/myprofile', checkAuth, UserController.getMyProfile);
+app.get('/user/myprofile', checkUser, UserController.getMyProfile);
+app.post('/user/appointment', checkUser, AppointmentController.bookAppointment);
 
-app.post('/doctor/register', addDoctorValidator, DoctorController.addNewDoctor)
+app.get('/doctors', checkUser, DoctorController.getAllDoctors);
+
+app.post('/doctor/register', addDoctorValidator, DoctorController.register);
+app.post('/doctor/login', loginValidator, DoctorController.login);
+app.get('/doctor/myprofile', checkDoctor, DoctorController.getMyProfile);
+app.post('/doctor/appointment', checkDoctor, AppointmentController.add);
 
 app.post('/admin/register', adminValidator, AdminController.register);
-app.post('/admin/login', adminValidator, AdminController.register);
-app.post('/admin/doctor/confirm', AdminController.confirm);
-app.post('/admin/doctor/deny', AdminController.deny);
+app.post('/admin/login', adminValidator, AdminController.login);
+app.post('/admin/doctor/confirm', checkAdmin, AdminController.confirm);
+app.post('/admin/doctor/deny', checkAdmin, AdminController.deny);
 
 app.listen(4000, (err) => {
      if(err){

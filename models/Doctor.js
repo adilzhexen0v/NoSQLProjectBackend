@@ -33,7 +33,11 @@ const DoctorSchema = new mongoose.Schema({
      },
      cv: String,
      imageUrl: String,
-     access: Boolean
+     access: Boolean,
+     appointmentId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Appointment'
+     }
 },
 {
      timestamps: true
