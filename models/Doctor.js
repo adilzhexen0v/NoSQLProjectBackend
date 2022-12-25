@@ -14,22 +14,26 @@ const DoctorSchema = new mongoose.Schema({
           required: true,
           unique: true
      },
+     hashedPassword: {
+          type: String,
+          required: true,
+     },
      occupation: {
           type: String,
           required: true
      },
-     workExperience: {
+     experience: {
           type: String,
-          required: true
-     },
-     price: {
-          type: Number,
           required: true
      },
      hospitalId: {
           type: mongoose.Schema.Types.ObjectId,
+          ref: 'Hospital',
           required: true
-     }
+     },
+     cv: String,
+     imageUrl: String,
+     access: Boolean
 },
 {
      timestamps: true
