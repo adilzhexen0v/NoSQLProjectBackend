@@ -1,23 +1,33 @@
 import Appointment from "../models/Appointment.js";
 import Doctor from "../models/Doctor.js";
 import User from "../models/User.js";
+import BookedAppointment from "../models/BookedAppointment.js";
 import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
+
 
 const moveDay = (date, day) => {
-     const d = new Date(date).getDate();
-     const ms = new Date(date).setDate(d + day);
-     return new Date(ms);
+     const a = new Date(date).getTime();
+     const b = a + (86400000 * +day);
+     return new Date(b);
 }
 
 const createTimes = (arr, count) => {
      let newArray = [];
-     arr.forEach((element, index) => {
+     arr.forEach(element => {
         for(let i = 0; i <= count; i++) {
-          newArray.push(moveDay(element, i))
+          let item = {
+               timeId: new ObjectId(),
+               time: moveDay(element, i),
+               booked: false
+          } 
+          newArray.push(item)
         }
      });
-     newArray = newArray.sort(function(a,b){return a.getTime() - b.getTime()});
+     newArray = newArray.sort( function( a, b ){
+          return a.time.getTime() - b.time.getTime()
+     });
      return newArray;
 }
 
@@ -28,7 +38,7 @@ export const add = async (req, res) => {
                return res.status(400).json(errors.array());
           }
           
-          const times = createTimes(req.body.times, 5);
+          const times = createTimes(req.body.times, +req.body.days);
 
           const newDocument = new Appointment({
                doctorId: req.doctorId,
@@ -67,23 +77,20 @@ export const add = async (req, res) => {
 export const bookAppointment = async (req, res) => {
      try {
 
-          const updatedUser = await User.updateOne({_id: req.userId}, {$push: {bookedAppointments: {doctorId: req.body.doctorId, time: req.body.time}}});
-          if(updatedUser.matchedCount === 0){
-               return res.status(404).json({
-                    message: 'User not found'
-               });
-          }
-          /*
-          console.log(`\n\n\n${req.body.time}\n\n\n`);
-          const updatedAppointment = await Appointment.updateOne({_id: req.body.appointmentId}, {$pull: {"times": req.body.time}});
-          if(updatedAppointment.matchedCount === 0){
-               return res.status(404).json({
-                    message: 'Appointment not found'
-               });
-          }
-          */
+          const bookedAppointment = new BookedAppointment({
+               userId: req.body.userId,
+               doctorId: req.body.doctorId,
+               appointmentId: req.body.appointmentId,
+               timeId: req.body.timeId
+          });
+
+          const newBookedAppointment = await bookedAppointment.save();
+
+          const updateBookedTime = await Appointment.updateOne({'times.timeId': ObjectId(req.body.timeId)}, {$set: {'times.$[elem].booked': true}}, {arrayFilters: [{'elem.timeId': ObjectId(req.body.timeId)}]});
+
           res.json({
-               updatedUser,
+               newBookedAppointment,
+               deleteTime: updateBookedTime
           });
      } catch (error) {
           console.log(error);

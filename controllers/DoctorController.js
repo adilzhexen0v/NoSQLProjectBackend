@@ -1,5 +1,6 @@
 import Doctor from "../models/Doctor.js";
 import Hospital from "../models/Hospital.js";
+import Occupation from "../models/Occupation.js";
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -12,7 +13,7 @@ export const register = async(req, res) => {
           }
 
           const checkHospital = await Hospital.findOne({$and: [{hospital: req.body.hospital}, {city: req.body.city}, {address: req.body.address}]});
-          let hospitalId = checkHospital._id;
+          let hospitalId;
           if(!checkHospital){
                const hospitalDocument = new Hospital({
                     hospital: req.body.hospital,
@@ -21,10 +22,23 @@ export const register = async(req, res) => {
                });
                const newHospital = await hospitalDocument.save();
                hospitalId = newHospital._id;
+          } else {
+               hospitalId = checkHospital._id
+          }
+
+          const checkOccupation = await Occupation.findOne({occupation: req.body.occupation});
+          let occupationId;
+          if(!checkOccupation){
+               const occupationDocument = new Occupation({
+                    occupation: req.body.occupation
+               });
+               const newOccupation = await occupationDocument.save();
+               occupationId = newOccupation._id;
+          } else {
+               occupationId = checkOccupation._id
           }
 
           
-
           const password = req.body.password;
           const salt = await bcrypt.genSalt(10);
           const hPassword = await bcrypt.hash(password, salt);
@@ -34,7 +48,7 @@ export const register = async(req, res) => {
                surname: req.body.surname,
                email: req.body.email,
                hashedPassword: hPassword,
-               occupation: req.body.occupation,
+               occupation: occupationId,
                experience: req.body.experience,
                hospitalId: hospitalId
           });
@@ -99,7 +113,7 @@ export const login = async (req, res) => {
 
 export const getAllDoctors = async (req, res) => {
      try {
-          const doctors = await Doctor.find().populate('hospitalId').exec();
+          const doctors = await Doctor.find({$and: [{access:  true}, {appointmentId: {$exists: true}}]}).populate('hospitalId').populate('appointmentId').exec();
           if(!doctors){
                return res.status(404).json({
                     message: 'Doctors not found'

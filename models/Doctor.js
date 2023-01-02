@@ -19,7 +19,8 @@ const DoctorSchema = new mongoose.Schema({
           required: true,
      },
      occupation: {
-          type: String,
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Occupation',
           required: true
      },
      experience: {
