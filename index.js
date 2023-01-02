@@ -41,7 +41,9 @@ app.post('/admin/login', adminValidator, AdminController.login);
 app.post('/admin/doctor/confirm', checkAdmin, AdminController.confirm);
 app.post('/admin/doctor/deny', checkAdmin, AdminController.deny);
 
-app.listen(4000, (err) => {
+const port = process.env.PORT || 4000;
+
+app.listen(port, (err) => {
      if(err){
           return console.log(err);
      }
