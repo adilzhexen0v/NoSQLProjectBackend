@@ -58,7 +58,7 @@ export const add = async (req, res) => {
           const token = jwt.sign({
                _id: newAppointment._id
           }, 'appkey', {
-               expiresIn: '10m'
+               expiresIn: '30m'
           });
 
 

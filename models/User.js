@@ -19,8 +19,6 @@ const UserSchema = new mongoose.Schema({
           required: true,
      },
      avatarUrl: String,
-     bookedAppointments: Array,
-
 },
 {
      timestamps: true

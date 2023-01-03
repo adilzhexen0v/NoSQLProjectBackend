@@ -57,7 +57,7 @@ export const register = async(req, res) => {
           const token = jwt.sign({
                _id: newDoctor._id
           }, 'doctorkey', {
-               expiresIn: '10m'
+               expiresIn: '30m'
           });
 
           res.json({
@@ -94,7 +94,7 @@ export const login = async (req, res) => {
           const token = jwt.sign({
                _id: doctor._id
           }, 'doctorkey', {
-               expiresIn: '10m'
+               expiresIn: '30m'
           });
 
           const { hashedPassword, ...doctorData } = doctor._doc;
@@ -113,7 +113,7 @@ export const login = async (req, res) => {
 
 export const getAllDoctors = async (req, res) => {
      try {
-          const doctors = await Doctor.find({$and: [{access:  true}, {appointmentId: {$exists: true}}]}).populate('hospitalId').populate('appointmentId').exec();
+          const doctors = await Doctor.find({$and: [{access:  true}, {appointmentId: {$exists: true}}]}).populate('hospitalId').populate('occupation').populate('appointmentId').exec();
           if(!doctors){
                return res.status(404).json({
                     message: 'Doctors not found'

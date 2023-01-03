@@ -29,7 +29,7 @@ app.post('/user/login', loginValidator, UserController.login);
 app.get('/user/myprofile', checkUser, UserController.getMyProfile);
 app.post('/user/appointment', checkUser, AppointmentController.bookAppointment);
 
-app.get('/doctors', checkUser, DoctorController.getAllDoctors);
+app.get('/doctors',  DoctorController.getAllDoctors);
 
 app.post('/doctor/register', addDoctorValidator, DoctorController.register);
 app.post('/doctor/login', loginValidator, DoctorController.login);
@@ -41,7 +41,9 @@ app.post('/admin/login', adminValidator, AdminController.login);
 app.post('/admin/doctor/confirm', checkAdmin, AdminController.confirm);
 app.post('/admin/doctor/deny', checkAdmin, AdminController.deny);
 
-app.listen(4000, (err) => {
+const port = process.env.PORT || 4000;
+
+app.listen(port, (err) => {
      if(err){
           return console.log(err);
      }
