@@ -119,7 +119,9 @@ export const getAllDoctors = async (req, res) => {
                     message: 'Doctors not found'
                });
           }
-          res.json(doctors);
+          res.json({
+               doctors: doctors
+          });
      } catch (error) {
           console.log(error);
           res.status(500).json({
