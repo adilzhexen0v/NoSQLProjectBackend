@@ -8,6 +8,8 @@ import checkUser from './middlewares/checkUser.js';
 import checkAdmin from './middlewares/checkAdmin.js';
 import { UserController, DoctorController, AdminController, AppointmentController } from './controllers/index.js';
 import checkDoctor from './middlewares/checkDoctor.js';
+
+mongoose.set("strictQuery", false);
 mongoose.connect(
      'mongodb+srv://admin:fDJOm5IhWXOwd0Hp@cluster0.5cekcxl.mongodb.net/hospitalDB?retryWrites=true&w=majority'
 ).then(() => {
@@ -29,7 +31,7 @@ app.post('/user/login', loginValidator, UserController.login);
 app.get('/user/myprofile', checkUser, UserController.getMyProfile);
 app.post('/user/appointment', checkUser, AppointmentController.bookAppointment);
 
-app.get('/doctors',  DoctorController.getAllDoctors);
+app.get('/doctors', checkUser, DoctorController.getAllDoctors);
 
 app.post('/doctor/register', addDoctorValidator, DoctorController.register);
 app.post('/doctor/login', loginValidator, DoctorController.login);
