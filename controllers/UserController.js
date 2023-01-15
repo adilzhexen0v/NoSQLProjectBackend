@@ -18,7 +18,9 @@ export const register = async (req, res) => {
                surname: req.body.surname,
                email: req.body.email,
                hashedPassword: hPassword,
-               dateOfBirth: req.body.date
+               dateOfBirth: req.body.date,
+               phoneNumber: req.body.phone,
+               gender: req.body.gender
           });
 
           const newUser = await newDocument.save(); 
