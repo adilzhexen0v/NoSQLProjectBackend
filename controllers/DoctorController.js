@@ -120,7 +120,7 @@ export const getAllDoctors = async (req, res) => {
                });
           }
           res.json({
-               doctors: doctors
+               doctors
           });
      } catch (error) {
           console.log(error);

@@ -6,7 +6,7 @@ import { addDoctorValidator } from './validators/doctor.js';
 import { adminValidator } from './validators/admin.js';
 import checkUser from './middlewares/checkUser.js';
 import checkAdmin from './middlewares/checkAdmin.js';
-import { UserController, DoctorController, AdminController, AppointmentController } from './controllers/index.js';
+import { UserController, DoctorController, AdminController, AppointmentController, HospitalController } from './controllers/index.js';
 import checkDoctor from './middlewares/checkDoctor.js';
 
 mongoose.set("strictQuery", false);
@@ -30,13 +30,15 @@ app.post('/user/register', registerValidator, UserController.register);
 app.post('/user/login', loginValidator, UserController.login);
 app.get('/user/myprofile', checkUser, UserController.getMyProfile);
 app.post('/user/appointment', checkUser, AppointmentController.bookAppointment);
+app.post('user/update', checkUser, UserController.updateUserProfile);
 
 app.get('/doctors', checkUser, DoctorController.getAllDoctors);
-
 app.post('/doctor/register', addDoctorValidator, DoctorController.register);
 app.post('/doctor/login', loginValidator, DoctorController.login);
 app.get('/doctor/myprofile', checkDoctor, DoctorController.getMyProfile);
 app.post('/doctor/appointment', checkDoctor, AppointmentController.add);
+
+app.get('/hospitals', checkUser, HospitalController.getAllHospitals);
 
 app.post('/admin/register', adminValidator, AdminController.register);
 app.post('/admin/login', adminValidator, AdminController.login);

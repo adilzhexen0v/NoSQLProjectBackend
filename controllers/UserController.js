@@ -99,3 +99,30 @@ export const getMyProfile = async (req, res) => {
      }
 };
 
+export const updateUserProfile = async (req, res) => {
+     try {
+          const user = await User.updateOne(
+               {
+                 _id: req.body._id,
+               },
+               {
+                 name: req.body.name,
+                 surname: req.body.surname,
+                 email: req.body.email,
+                 phoneNumber: req.body.phone,
+                 dateOfBirth: req.body.date,
+               }
+          );
+          if(!user){
+               return res.status(404).json({
+                    message: 'User not found'
+               });
+          }
+          res.json(user);
+     } catch (error) {
+          console.log(error);
+          res.status(500).json({
+               message: 'No access'
+          })
+     }
+}
