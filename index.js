@@ -30,7 +30,7 @@ app.post('/user/register', registerValidator, UserController.register);
 app.post('/user/login', loginValidator, UserController.login);
 app.get('/user/myprofile', checkUser, UserController.getMyProfile);
 app.post('/user/appointment', checkUser, AppointmentController.bookAppointment);
-app.post('user/update', checkUser, UserController.updateUserProfile);
+app.post('/user/update', checkUser, UserController.updateUserProfile);
 
 app.get('/doctors', checkUser, DoctorController.getAllDoctors);
 app.post('/doctor/register', addDoctorValidator, DoctorController.register);
