@@ -38,7 +38,7 @@ app.post('/doctor/login', loginValidator, DoctorController.login);
 app.get('/doctor/myprofile', checkDoctor, DoctorController.getMyProfile);
 app.post('/doctor/appointment', checkDoctor, AppointmentController.add);
 
-app.get('/hospitals', checkUser, HospitalController.getAllHospitals);
+app.get('/hospitals', HospitalController.getAllHospitals);
 
 app.post('/admin/register', adminValidator, AdminController.register);
 app.post('/admin/login', adminValidator, AdminController.login);
