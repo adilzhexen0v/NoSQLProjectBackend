@@ -60,9 +60,11 @@ export const register = async(req, res) => {
                expiresIn: '30m'
           });
 
+          const {hashedPassword, ...doctorData} = newDoctor._doc
+
           res.json({
                token,
-               newDoctor
+               doctorData
           })
 
 
@@ -113,7 +115,7 @@ export const login = async (req, res) => {
 
 export const getAllDoctors = async (req, res) => {
      try {
-          const doctors = await Doctor.find({$and: [{access:  true}, {appointmentId: {$exists: true}}]}).populate('hospitalId').populate('occupation').populate('appointmentId').exec();
+          const doctors = await Doctor.find({access:  true}).populate('hospitalId').populate('occupation').populate('appointmentId').exec();
           if(!doctors){
                return res.status(404).json({
                     message: 'Doctors not found'
