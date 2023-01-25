@@ -44,6 +44,7 @@ app.post('/admin/register', adminValidator, AdminController.register);
 app.post('/admin/login', adminValidator, AdminController.login);
 app.post('/admin/doctor/confirm', checkAdmin, AdminController.confirm);
 app.post('/admin/doctor/deny', checkAdmin, AdminController.deny);
+app.get('/admin/doctors', checkAdmin, AdminController.getAllDoctorsWithoutAccess)
 
 const port = process.env.PORT || 4000;
 

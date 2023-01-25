@@ -115,3 +115,22 @@ export const deny = async (req, res) => {
           })
      }
 }
+
+export const getAllDoctorsWithoutAccess = async (req, res) => {
+     try {
+          const doctors = await Doctor.find({$or: [{access: false}, {access: {$exists: false}}]}).populate('hospitalId').populate('occupation').populate('appointmentId').exec();
+          if(!doctors){
+               return res.status(404).json({
+                    message: 'Doctors not found'
+               });
+          }
+          res.json({
+               doctors
+          });
+     } catch (error) {
+          console.log(error);
+          res.status(500).json({
+               message: 'No access'
+          });
+     }
+};
