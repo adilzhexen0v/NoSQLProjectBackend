@@ -149,3 +149,20 @@ export const getMyProfile = async (req, res) => {
           });
      }
 };
+
+export const uploadProfilePicture = async (req, res) => {
+     try {
+          const uploadDocImg = await Doctor.updateOne({_id: req.body.id}, {$set: {imageUrl: req.file.originalname}});
+          if(uploadDocImg.matchedCount == 0){
+               return res.status(404).json({
+                    message: 'Doctor not found'
+               });
+          }
+          res.json(uploadDocImg);
+     } catch (error) {
+          console.log(error);
+          res.status(500).json({
+               message: 'No access'
+          });
+     }
+}

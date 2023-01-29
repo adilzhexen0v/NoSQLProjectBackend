@@ -8,6 +8,7 @@ import checkUser from './middlewares/checkUser.js';
 import checkAdmin from './middlewares/checkAdmin.js';
 import { UserController, DoctorController, AdminController, AppointmentController, HospitalController } from './controllers/index.js';
 import checkDoctor from './middlewares/checkDoctor.js';
+import multer from 'multer';
 
 mongoose.set("strictQuery", false);
 mongoose.connect(
@@ -21,6 +22,20 @@ mongoose.connect(
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+const storage = multer.diskStorage({
+     destination: (_, __, callback) => {
+          callback(null, 'uploads');
+     },
+     filename: (_, file, callback) => {
+          callback(null, file.originalname);
+     }
+});
+
+app.use('/uploads', express.static('uploads'));
+
+const upload = multer({ storage });
+
 
 app.get('/', async(req, res) => {
      res.send("something...");
@@ -37,6 +52,7 @@ app.post('/doctor/register', addDoctorValidator, DoctorController.register);
 app.post('/doctor/login', loginValidator, DoctorController.login);
 app.get('/doctor/myprofile', checkDoctor, DoctorController.getMyProfile);
 app.post('/doctor/appointment', checkDoctor, AppointmentController.add);
+app.post('/doctor/upload/profilepicture', checkDoctor, upload.single('docimg'), DoctorController.uploadProfilePicture)
 
 app.get('/hospitals', HospitalController.getAllHospitals);
 
