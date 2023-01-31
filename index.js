@@ -53,6 +53,7 @@ app.post('/doctor/login', loginValidator, DoctorController.login);
 app.get('/doctor/myprofile', checkDoctor, DoctorController.getMyProfile);
 app.post('/doctor/appointment', checkDoctor, AppointmentController.add);
 app.post('/doctor/upload/profilepicture', checkDoctor, upload.single('docimg'), DoctorController.uploadProfilePicture)
+app.post('/doctor/delete/profilepicture', checkDoctor, DoctorController.deleteProfilePicture)
 
 app.get('/hospitals', HospitalController.getAllHospitals);
 
