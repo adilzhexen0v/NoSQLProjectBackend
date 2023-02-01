@@ -167,6 +167,23 @@ export const uploadProfilePicture = async (req, res) => {
      }
 }
 
+export const uploadCV = async (req, res) => {
+     try {
+          const uploadCV = await Doctor.updateOne({_id: req.body.id}, {$set: {cv: req.file.originalname}});
+          if(uploadCV.matchedCount == 0){
+               return res.status(404).json({
+                    message: 'Doctor not found'
+               });
+          }
+          res.json(uploadCV);
+     } catch (error) {
+          console.log(error);
+          res.status(500).json({
+               message: 'No access'
+          });
+     }
+}
+
 export const deleteProfilePicture = async (req, res) => {
      try {
           const uploadDocImg = await Doctor.updateOne({_id: req.body.id}, {$unset: {imageUrl: 1}});
