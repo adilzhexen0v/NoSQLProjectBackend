@@ -1,5 +1,6 @@
 import Admin from "../models/Admin.js";
 import Doctor from "../models/Doctor.js";
+import Hospital from "../models/Hospital.js";
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -126,6 +127,29 @@ export const getAllDoctorsWithoutAccess = async (req, res) => {
           }
           res.json({
                doctors
+          });
+     } catch (error) {
+          console.log(error);
+          res.status(500).json({
+               message: 'No access'
+          });
+     }
+};
+
+export const getAllHospitalsWithoutInfo = async (_, res) => {
+     try {
+          const hospitals = await Hospital.find({$or: [
+               {time: {$exists: false}}, 
+               {imageUrl: {$exists: false}}, 
+               {phone: {$exists: false}}
+          ]});
+          if(!hospitals){
+               return res.status(404).json({
+                    message: 'Hospitals not found'
+               });
+          }
+          res.json({
+               hospitals
           });
      } catch (error) {
           console.log(error);

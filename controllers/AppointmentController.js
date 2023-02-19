@@ -6,44 +6,44 @@ import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 
-
-const moveDay = (date, day) => {
-     const a = new Date(date).getTime();
-     const b = a + (86400000 * +day);
-     return new Date(b);
+const getWithoutZero = (num) => {
+     if (("" + num[0]) == '0') {
+         return num[1];
+     }
+     return num;
 }
 
-const createTimes = (arr, count) => {
-     let newArray = [];
-     arr.forEach(element => {
-        for(let i = 0; i <= count; i++) {
-          let item = {
-               timeId: new ObjectId(),
-               time: moveDay(element, i),
-               booked: false
-          } 
-          newArray.push(item)
-        }
-     });
-     newArray = newArray.sort( function( a, b ){
-          return a.time.getTime() - b.time.getTime()
-     });
-     return newArray;
-}
+// const moveDay = (date, day) => {
+//      const a = new Date(date).getTime();
+//      const b = a + (86400000 * +day);
+//      return new Date(b);
+// }
+
+// const createTimes = (arr, count) => {
+//      let newArray = [];
+//      arr.forEach(element => {
+//         for(let i = 0; i <= count; i++) {
+//           let item = {
+//                timeId: new ObjectId(),
+//                time: moveDay(element, i),
+//                booked: false
+//           } 
+//           newArray.push(item)
+//         }
+//      });
+//      newArray = newArray.sort( function( a, b ){
+//           return a.time.getTime() - b.time.getTime()
+//      });
+//      return newArray;
+// }
 
 export const add = async (req, res) => {
      try {
-          const errors = validationResult(req);
-          if (!errors.isEmpty()){
-               return res.status(400).json(errors.array());
-          }
-          
-          const times = createTimes(req.body.times, +req.body.days);
-
           const newDocument = new Appointment({
                doctorId: req.doctorId,
                price: req.body.price,
-               times: times
+               days: req.body.days,
+               times: req.body.times
           });
 
           const newAppointment = await newDocument.save(); 
@@ -54,17 +54,8 @@ export const add = async (req, res) => {
                     message: 'Doctor not found'
                });
           }
-
-          const token = jwt.sign({
-               _id: newAppointment._id
-          }, 'appkey', {
-               expiresIn: '30m'
-          });
-
-
           res.json({
-               newAppointment,
-               token
+               newAppointment
           });
      } catch (error) {
           console.log(error);
@@ -77,20 +68,29 @@ export const add = async (req, res) => {
 export const bookAppointment = async (req, res) => {
      try {
 
+          const doctor = await Doctor.findOne({appointmentId: req.body.appointmentId});
+          if(!doctor) {
+               return res.status(500).json({
+                    message: 'Doctor not found'
+               });
+          }
+
           const bookedAppointment = new BookedAppointment({
                userId: req.body.userId,
-               doctorId: req.body.doctorId,
-               appointmentId: req.body.appointmentId,
-               timeId: req.body.timeId
+               doctorId: doctor._id,
+               time: new Date(
+                    +req.body.year,
+                    +req.body.month,
+                    +req.body.day,
+                    +getWithoutZero(req.body.time.substring(0, 2)),
+                    +getWithoutZero(req.body.time.substring(3)),
+               ),
+               status: 'not started'
           });
 
           const newBookedAppointment = await bookedAppointment.save();
-
-          const updateBookedTime = await Appointment.updateOne({'times.timeId': ObjectId(req.body.timeId)}, {$set: {'times.$[elem].booked': true}}, {arrayFilters: [{'elem.timeId': ObjectId(req.body.timeId)}]});
-
           res.json({
                newBookedAppointment,
-               deleteTime: updateBookedTime
           });
      } catch (error) {
           console.log(error);

@@ -11,15 +11,18 @@ const BookedAppointmentSchema = new mongoose.Schema({
           ref: 'Doctor',
           required: true
      },
-     appointmentId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Appointment',
+     time: {
+          type: Date,
           required: true
      },
-     timeId: {
-          type: mongoose.Schema.Types.ObjectId,
+     status: {
+          type: String,
           required: true
      },
+     result: {
+          type: String,
+          required: false
+     }
 }
 );
 

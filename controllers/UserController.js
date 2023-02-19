@@ -84,13 +84,14 @@ export const login = async (req, res) => {
 export const getMyProfile = async (req, res) => {
      try {
           const user = await User.findById(req.userId);
+          const {hashedPassword, ...userData} = user._doc;
 
           if(!user){
                return res.status(404).json({
                     message: 'User not found'
                });
           }
-          res.json(user);
+          res.json(userData);
      } catch (error) {
           console.log(error);
           res.status(500).json({
