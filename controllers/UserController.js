@@ -28,7 +28,7 @@ export const register = async (req, res) => {
           const token = jwt.sign({
                _id: newUser._id
           }, 'secretkey', {
-               expiresIn: '30m'
+               expiresIn: '3d'
           });
 
           const { hashedPassword, ...userData } = newUser._doc;
@@ -64,7 +64,7 @@ export const login = async (req, res) => {
           const token = jwt.sign({
                _id: user._id
           }, 'secretkey', {
-               expiresIn: '30m'
+               expiresIn: '3d'
           });
 
           const { hashedPassword, ...userData } = user._doc;

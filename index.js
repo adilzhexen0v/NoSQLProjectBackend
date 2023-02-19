@@ -52,9 +52,10 @@ app.post('/doctor/register', addDoctorValidator, DoctorController.register);
 app.post('/doctor/login', loginValidator, DoctorController.login);
 app.get('/doctor/myprofile', checkDoctor, DoctorController.getMyProfile);
 app.post('/doctor/appointment', checkDoctor, AppointmentController.add);
-app.post('/doctor/upload/profilepicture', checkDoctor, upload.single('docimg'), DoctorController.uploadProfilePicture)
-app.post('/doctor/upload/cv', checkDoctor, upload.single('cv'), DoctorController.uploadCV)
-app.post('/doctor/delete/profilepicture', checkDoctor, DoctorController.deleteProfilePicture)
+app.post('/doctor/upload/profilepicture', checkDoctor, upload.single('docimg'), DoctorController.uploadProfilePicture);
+app.post('/doctor/upload/cv', checkDoctor, upload.single('cv'), DoctorController.uploadCV);
+app.post('/doctor/delete/profilepicture', checkDoctor, DoctorController.deleteProfilePicture);
+app.get('/doctor/appointments/notstarted', checkDoctor, DoctorController.getAllMyNotStartedAppointments);
 
 app.get('/hospitals', HospitalController.getAllHospitals);
 

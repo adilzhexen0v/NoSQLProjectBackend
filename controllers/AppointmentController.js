@@ -85,7 +85,7 @@ export const bookAppointment = async (req, res) => {
                     +getWithoutZero(req.body.time.substring(0, 2)),
                     +getWithoutZero(req.body.time.substring(3)),
                ),
-               status: 'not started'
+               finished: false
           });
 
           const newBookedAppointment = await bookedAppointment.save();

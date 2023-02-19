@@ -15,8 +15,8 @@ const BookedAppointmentSchema = new mongoose.Schema({
           type: Date,
           required: true
      },
-     status: {
-          type: String,
+     finished: {
+          type: Boolean,
           required: true
      },
      result: {

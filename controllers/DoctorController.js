@@ -1,6 +1,7 @@
 import Doctor from "../models/Doctor.js";
 import Hospital from "../models/Hospital.js";
 import Occupation from "../models/Occupation.js";
+import BookedAppointment from "../models/BookedAppointment.js";
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -12,7 +13,11 @@ export const register = async(req, res) => {
                return res.status(400).json(errors.array());
           }
 
-          const checkHospital = await Hospital.findOne({$and: [{hospital: req.body.hospital}, {city: req.body.city}, {address: req.body.address}]});
+          const checkHospital = await Hospital.findOne({$and: [
+               {hospital: req.body.hospital}, 
+               {city: req.body.city}, 
+               {address: req.body.address}
+          ]});
           let hospitalId;
           if(!checkHospital){
                const hospitalDocument = new Hospital({
@@ -193,6 +198,23 @@ export const deleteProfilePicture = async (req, res) => {
                });
           }
           res.json(uploadDocImg);
+     } catch (error) {
+          console.log(error);
+          res.status(500).json({
+               message: 'No access'
+          });
+     }
+}
+
+export const getAllMyNotStartedAppointments = async (req, res) => {
+     try {
+          const appointments = await BookedAppointment
+                                     .find({$and: [{doctorId: req.doctorId}, {finished: false}]})
+                                     .populate('userId', 'name surname dateOfBith gender')
+                                     .exec();
+          res.json(
+               appointments
+          );
      } catch (error) {
           console.log(error);
           res.status(500).json({
