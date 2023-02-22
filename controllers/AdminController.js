@@ -136,13 +136,13 @@ export const getAllDoctorsWithoutAccess = async (req, res) => {
      }
 };
 
-export const getAllHospitalsWithoutInfo = async (_, res) => {
+export const getAllHospitals = async (_, res) => {
      try {
-          const hospitals = await Hospital.find({$or: [
-               {time: {$exists: false}}, 
-               {imageUrl: {$exists: false}}, 
-               {phone: {$exists: false}}
-          ]});
+          const hospitals = await Hospital.find().sort({
+               time: 1,
+               address: 1,
+               imageUrl: 1
+          });
           if(!hospitals){
                return res.status(404).json({
                     message: 'Hospitals not found'
@@ -162,14 +162,10 @@ export const getAllHospitalsWithoutInfo = async (_, res) => {
 export const updateHospitalInfo = async (req, res) => {
      try {
           const updatedHospital = await Hospital.findByIdAndUpdate(req.body.id, {$set: {
+               address: req.body.address,
                time: req.body.time, 
                phone: req.body.phone
           }});
-          // if (updatedHospital.matchedCount === 0) {
-          //      return res.status(404).json({
-          //           message: 'Hospital not found'
-          //      });
-          // }
           res.json(updatedHospital);
      } catch (err) {
           console.log(err);

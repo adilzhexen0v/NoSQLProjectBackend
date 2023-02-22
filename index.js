@@ -66,7 +66,7 @@ app.post('/admin/login', adminValidator, AdminController.login);
 app.post('/admin/doctor/confirm', checkAdmin, AdminController.confirm);
 app.post('/admin/doctor/deny', checkAdmin, AdminController.deny);
 app.get('/admin/doctors', checkAdmin, AdminController.getAllDoctorsWithoutAccess);
-app.get('/admin/hospitals/noinfo', checkAdmin, AdminController.getAllHospitalsWithoutInfo);
+app.get('/admin/hospitals/show', checkAdmin, AdminController.getAllHospitals);
 app.post('/admin/hospital/update', checkAdmin, AdminController.updateHospitalInfo);
 app.post('/admin/hospital/upload', checkAdmin, upload.single('hospitalImg'), AdminController.uploadHospitalImage);
 
