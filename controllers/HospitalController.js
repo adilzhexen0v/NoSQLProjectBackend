@@ -17,3 +17,42 @@ export const getAllHospitals = async (req, res) => {
           });
      }
 };
+
+export const getAllHospitalsFromCity = async (req, res) => {
+     try {
+          const hospitals = await Hospital.find({city: req.params.city});
+          if(!hospitals){
+               return res.status(404).json({
+                    message: 'Cities not found'
+               });
+          }
+          res.json({
+               hospitals
+          });
+     } catch (error) {
+          console.log(error);
+          res.status(500).json({
+               message: error
+          });
+     }
+}
+
+export const getAllCitiesForSorting = async (req, res) => {
+     try {
+          const cities = await Hospital.distinct('city');
+          if(!cities){
+               return res.status(404).json({
+                    message: 'Cities not found'
+               });
+          }
+          res.json({
+               cities
+          });
+     } catch (error) {
+          console.log(error);
+          res.status(500).json({
+               message: error
+          });
+     }
+}
+

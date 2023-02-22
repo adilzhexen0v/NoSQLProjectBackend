@@ -58,6 +58,8 @@ app.post('/doctor/delete/profilepicture', checkDoctor, DoctorController.deletePr
 app.get('/doctor/appointments/notstarted', checkDoctor, DoctorController.getAllMyNotStartedAppointments);
 
 app.get('/hospitals', HospitalController.getAllHospitals);
+app.get('/hospitals/cities', HospitalController.getAllCitiesForSorting);
+app.get('/hospitals/:city', HospitalController.getAllHospitalsFromCity);
 
 app.post('/admin/register', adminValidator, AdminController.register);
 app.post('/admin/login', adminValidator, AdminController.login);
@@ -65,6 +67,8 @@ app.post('/admin/doctor/confirm', checkAdmin, AdminController.confirm);
 app.post('/admin/doctor/deny', checkAdmin, AdminController.deny);
 app.get('/admin/doctors', checkAdmin, AdminController.getAllDoctorsWithoutAccess);
 app.get('/admin/hospitals/noinfo', checkAdmin, AdminController.getAllHospitalsWithoutInfo);
+app.post('/admin/hospital/update', checkAdmin, AdminController.updateHospitalInfo);
+app.post('/admin/hospital/upload', checkAdmin, upload.single('hospitalImg'), AdminController.uploadHospitalImage);
 
 
 const port = process.env.PORT || 4000;

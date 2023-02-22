@@ -25,7 +25,7 @@ export const register = async (req, res) => {
           const token = jwt.sign({
                _id: newAdmin._id
           }, 'adminkey', {
-               expiresIn: '30m'
+               expiresIn: '3d'
           });
 
           const { hashedPassword, ...adminData } = newAdmin._doc;
@@ -61,7 +61,7 @@ export const login = async (req, res) => {
           const token = jwt.sign({
                _id: admin._id
           }, 'adminkey', {
-               expiresIn: '30m'
+               expiresIn: '3d'
           });
 
           const { hashedPassword, ...adminData } = admin._doc;
@@ -158,3 +158,35 @@ export const getAllHospitalsWithoutInfo = async (_, res) => {
           });
      }
 };
+
+export const updateHospitalInfo = async (req, res) => {
+     try {
+          const updatedHospital = await Hospital.findByIdAndUpdate(req.body.id, {$set: {
+               time: req.body.time, 
+               phone: req.body.phone
+          }});
+          // if (updatedHospital.matchedCount === 0) {
+          //      return res.status(404).json({
+          //           message: 'Hospital not found'
+          //      });
+          // }
+          res.json(updatedHospital);
+     } catch (err) {
+          console.log(err);
+          res.status(500).json({
+               message: err
+          });
+     }
+};
+
+export const uploadHospitalImage = async (req, res) => {
+     try {
+          const hospitalWithUploadedImage = await Hospital.findByIdAndUpdate(req.body.id, {$set: {imageUrl: req.file.originalname}});
+          res.json(hospitalWithUploadedImage);
+     } catch (error) {
+          console.log(error);
+          res.status(500).json({
+               message: 'Error'
+          })
+     }
+}
