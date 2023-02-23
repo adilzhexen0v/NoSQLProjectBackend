@@ -46,6 +46,7 @@ app.post('/user/login', loginValidator, UserController.login);
 app.get('/user/myprofile', checkUser, UserController.getMyProfile);
 app.post('/user/appointment', checkUser, AppointmentController.bookAppointment);
 app.post('/user/update', checkUser, UserController.updateUserProfile);
+app.get('/user/appointments', checkUser, AppointmentController.showAllAppointments);
 
 app.get('/doctors', checkUser, DoctorController.getAllDoctors);
 app.post('/doctor/register', addDoctorValidator, DoctorController.register);

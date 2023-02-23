@@ -67,7 +67,6 @@ export const add = async (req, res) => {
 
 export const bookAppointment = async (req, res) => {
      try {
-
           const doctor = await Doctor.findOne({appointmentId: req.body.appointmentId});
           if(!doctor) {
                return res.status(500).json({
@@ -96,6 +95,36 @@ export const bookAppointment = async (req, res) => {
           console.log(error);
           res.status(500).json({
                message: 'No access'
+          });
+     }
+}
+
+export const showAllAppointments = async (req, res) => {
+     try {
+          const appointments = await Appointment.find()
+               .populate({
+                    path: 'doctorId', 
+                    select: 'name surname experience imageUrl', 
+                    populate: {
+                         path: 'hospitalId', 
+                         select: 'hospital city address'
+                    }
+               })
+               .exec();
+
+          if(!appointments) {
+               res.status(404).json({
+                    message: 'Appointments not found'
+               });
+          }
+
+          res.json({
+               appointments
+          });
+     } catch (error) {
+          console.log(error);
+          res.status(500).json({
+               message: 'No acces'
           });
      }
 }
