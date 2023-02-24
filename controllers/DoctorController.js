@@ -120,7 +120,11 @@ export const login = async (req, res) => {
 
 export const getAllDoctors = async (req, res) => {
      try {
-          const doctors = await Doctor.find({access:  true}).populate('hospitalId').populate('occupation').populate('appointmentId').exec();
+          const doctors = await Doctor.find({access:  true})
+               .populate('hospitalId')
+               .populate('occupation')
+               .populate('appointmentId')
+               .exec();
           if(!doctors){
                return res.status(404).json({
                     message: 'Doctors not found'
@@ -139,7 +143,10 @@ export const getAllDoctors = async (req, res) => {
 
 export const getMyProfile = async (req, res) => {
      try {
-          const doctor = await Doctor.findById(req.doctorId).populate('hospitalId').populate('occupation').exec();
+          const doctor = await Doctor.findById(req.doctorId)
+               .populate('hospitalId')
+               .populate('occupation')
+               exec();
 
           if(!doctor){
                return res.status(404).json({
@@ -191,7 +198,10 @@ export const uploadCV = async (req, res) => {
 
 export const deleteProfilePicture = async (req, res) => {
      try {
-          const uploadDocImg = await Doctor.updateOne({_id: req.body.id}, {$unset: {imageUrl: 1}});
+          const uploadDocImg = await Doctor.updateOne(
+               {_id: req.body.id}, 
+               {$unset: {imageUrl: 1}}
+          );
           if(uploadDocImg.matchedCount == 0){
                return res.status(404).json({
                     message: 'Doctor not found'

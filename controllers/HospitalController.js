@@ -20,6 +20,12 @@ export const getAllHospitals = async (req, res) => {
 
 export const getAllHospitalsFromCity = async (req, res) => {
      try {
+          
+          const deletedHospital = await Hospital
+               .findByIdAndDelete(req.body.hospitalId);
+
+
+          console.log(deletedHospital);
           const hospitals = await Hospital.find({city: req.params.city});
           if(!hospitals){
                return res.status(404).json({

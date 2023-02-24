@@ -81,7 +81,10 @@ export const login = async (req, res) => {
 
 export const confirm = async (req, res) => {
      try {
-          const updatedDoctor = await Doctor.updateOne({_id: req.body._id}, {$set: {access: true}});
+          const updatedDoctor = await Doctor.updateOne(
+               {_id: req.body._id}, 
+               {$set: {access: true}}
+          );
 
           if(updatedDoctor.matchedCount === 0){
                return res.status(404).json({
@@ -138,7 +141,8 @@ export const getAllDoctorsWithoutAccess = async (req, res) => {
 
 export const getAllHospitals = async (_, res) => {
      try {
-          const hospitals = await Hospital.find().sort({
+          const hospitals = await Hospital.find()
+          .sort({
                time: 1,
                address: 1,
                imageUrl: 1

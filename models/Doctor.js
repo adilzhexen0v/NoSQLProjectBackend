@@ -32,9 +32,18 @@ const DoctorSchema = new mongoose.Schema({
           ref: 'Hospital',
           required: true
      },
-     cv: String,
-     imageUrl: String,
-     access: Boolean,
+     cv: {
+          type: String,
+          required: false
+     },
+     imageUrl: {
+          type: String,
+          required: false
+     },
+     access: {
+          type: Boolean,
+          required: false
+     },
      appointmentId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Appointment'
